@@ -57,6 +57,63 @@
     color:#FFF8F0;
     overflow:hidden;
     position:relative;
+    isolation:isolate;
+  }
+  .hero::before{
+    content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(620px 360px at 16% 18%, rgba(232,121,91,.30), transparent 65%),
+      radial-gradient(520px 320px at 88% 86%, rgba(201,168,106,.18), transparent 65%),
+      radial-gradient(420px 260px at 62% 8%, rgba(255,248,240,.07), transparent 60%);
+    animation:heroGlow 9s ease-in-out infinite alternate;
+  }
+  @keyframes heroGlow{
+    from{transform:translate3d(0,0,0) scale(1); opacity:.72}
+    to{transform:translate3d(-26px,10px,0) scale(1.07); opacity:1}
+  }
+  @keyframes riseIn{
+    from{opacity:0; transform:translateY(26px)}
+    to{opacity:1; transform:translateY(0)}
+  }
+  @keyframes popIn{
+    0%{opacity:0; transform:translateY(20px) scale(.93)}
+    60%{opacity:1; transform:translateY(-4px) scale(1.02)}
+    100%{opacity:1; transform:translateY(0) scale(1)}
+  }
+  @keyframes kenBurns{
+    from{transform:scale(1.03) translateX(0)}
+    to{transform:scale(1.15) translateX(-16px)}
+  }
+  @keyframes floatY{
+    0%,100%{transform:translateY(0)}
+    50%{transform:translateY(-9px)}
+  }
+  @keyframes pulseDot{
+    0%{box-shadow:0 0 0 0 rgba(232,121,91,.55)}
+    70%{box-shadow:0 0 0 9px rgba(232,121,91,0)}
+    100%{box-shadow:0 0 0 0 rgba(232,121,91,0)}
+  }
+  @keyframes drawLine{
+    from{transform:scaleX(0)}
+    to{transform:scaleX(1)}
+  }
+  @keyframes shineSweep{
+    0%,62%{transform:translateX(220%) skewX(-18deg); opacity:0}
+    68%{opacity:1}
+    86%,100%{transform:translateX(-260%) skewX(-18deg); opacity:0}
+  }
+  @keyframes driftDot{
+    0%{transform:translateY(0) translateX(0); opacity:.3}
+    50%{opacity:.95}
+    100%{transform:translateY(-52px) translateX(12px); opacity:.3}
+  }
+  @keyframes heroPhotoIn{
+    from{opacity:0; transform:scale(1.045)}
+    to{opacity:1; transform:scale(1)}
+  }
+  @keyframes sealSpinIn{
+    from{transform:rotate(-14deg) scale(.6); opacity:0}
+    to{transform:rotate(0deg) scale(1); opacity:1}
   }
   @media (prefers-color-scheme: dark){ .hero{background:#171A18} }
   .hero-inner{
@@ -64,12 +121,34 @@
     grid-template-columns:1.05fr .95fr;
     gap:0;
     min-height:560px;
+    position:relative; z-index:1;
   }
+  .hero-dots{position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden}
+  .hero-dots span{
+    position:absolute; border-radius:50%;
+    background:radial-gradient(circle, rgba(255,201,181,.95), rgba(232,121,91,.25) 70%, transparent);
+    animation:driftDot 7s ease-in-out infinite alternate;
+  }
+  .hero-dots span:nth-child(1){width:10px;height:10px; inset-inline-start:6%; top:22%; animation-delay:0s}
+  .hero-dots span:nth-child(2){width:6px;height:6px; inset-inline-start:42%; top:14%; animation-delay:1.2s; animation-duration:8s}
+  .hero-dots span:nth-child(3){width:8px;height:8px; inset-inline-start:48%; top:78%; animation-delay:.6s; animation-duration:6.5s}
+  .hero-dots span:nth-child(4){width:5px;height:5px; inset-inline-start:12%; top:66%; animation-delay:2s; animation-duration:9s}
+  .hero-dots span:nth-child(5){width:7px;height:7px; inset-inline-start:88%; top:18%; animation-delay:.9s}
   .hero-text{
     padding:56px 48px 48px 20px;
     display:flex; flex-direction:column; justify-content:center;
     position:relative; z-index:2;
   }
+  .hero-text .badge{animation:riseIn .65s cubic-bezier(.22,1,.36,1) both}
+  .hero-text h1{animation:riseIn .75s .12s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .hero-sub{animation:riseIn .75s .24s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .hero-desc{animation:riseIn .75s .36s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .cta-row{animation:riseIn .75s .48s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .hero-meta{animation:riseIn .75s .62s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .hero-meta > div{animation:riseIn .6s cubic-bezier(.22,1,.36,1) both}
+  .hero-text .hero-meta > div:nth-child(1){animation-delay:.66s}
+  .hero-text .hero-meta > div:nth-child(2){animation-delay:.76s}
+  .hero-text .hero-meta > div:nth-child(3){animation-delay:.86s}
   .badge{
     display:inline-flex; align-items:center; gap:8px;
     background:rgba(232,121,91,.18);
@@ -79,19 +158,39 @@
     padding:6px 14px; border-radius:999px;
     width:fit-content;
   }
-  .badge i{width:8px;height:8px;border-radius:50%;background:var(--coral);display:inline-block}
+  .badge i{width:8px;height:8px;border-radius:50%;background:var(--coral);display:inline-block; animation:pulseDot 2.1s ease-out infinite}
   h1{
     font-size:clamp(2.6rem,6vw,4.2rem);
     font-weight:900; line-height:1.05; margin:18px 0 6px;
     letter-spacing:-.02em;
   }
-  h1 .accent{color:var(--coral)}
+  h1 .accent{color:var(--coral); position:relative; display:inline-block; white-space:nowrap}
+  h1 .accent::after{
+    content:""; position:absolute; inset-inline:0; bottom:2px; height:6px; border-radius:99px;
+    background:linear-gradient(90deg, var(--coral), var(--gold-seal));
+    transform-origin:right center;
+    animation:drawLine .7s .75s cubic-bezier(.22,1,.36,1) both;
+    opacity:.9;
+  }
   .hero-sub{
     font-size:clamp(1.15rem,2.4vw,1.45rem);
     font-weight:700; color:#F3E9DC; margin:0 0 14px; line-height:1.5;
   }
   .hero-desc{color:#CFC8BE; font-size:1.02rem; max-width:52ch; margin:0 0 28px}
   .cta-row{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+  .cta-row .btn-coral{position:relative; overflow:hidden; animation:ctaGlow 3.2s ease-in-out infinite}
+  .cta-row .btn-coral::after{
+    content:""; position:absolute; top:-10%; bottom:-10%; width:42%;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,.45), transparent);
+    animation:shineSweep 4.2s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes ctaGlow{
+    0%,100%{box-shadow:0 8px 20px rgba(232,121,91,.32)}
+    50%{box-shadow:0 10px 30px rgba(232,121,91,.55)}
+  }
+  .cta-row .btn{transition:transform .2s ease, background .18s ease, border-color .18s ease, box-shadow .2s ease}
+  .cta-row .btn:hover{transform:translateY(-3px)}
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:10px;
     min-height:52px; padding:12px 22px; border-radius:14px;
@@ -111,10 +210,10 @@
   }
   .hero-meta div b{display:block; font-size:1.05rem; color:#fff}
   .hero-meta div span{font-size:.85rem; color:#B9B2A6}
-  .hero-photo{position:relative; min-height:320px}
-  .hero-photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+  .hero-photo{position:relative; min-height:320px; overflow:hidden; animation:heroPhotoIn 1.05s .18s cubic-bezier(.22,1,.36,1) both; will-change:transform}
+  .hero-photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; animation:kenBurns 16s ease-in-out infinite alternate; will-change:transform}
   .hero-photo::after{
-    content:""; position:absolute; inset:0;
+    content:""; position:absolute; inset:0; z-index:1;
     background:linear-gradient(to left, rgba(23,26,24,.55), transparent 45%),
                linear-gradient(to top, rgba(23,26,24,.35), transparent 40%);
   }
@@ -123,11 +222,13 @@
     background:var(--paper); color:var(--charcoal);
     border-radius:16px; padding:12px 16px; display:flex; gap:12px; align-items:center;
     box-shadow:var(--shadow); max-width:300px;
+    animation:popIn .7s .95s cubic-bezier(.22,1,.36,1) both, floatY 5.2s 1.8s ease-in-out infinite;
   }
   .seal-badge{
     width:46px;height:46px;flex:none;border-radius:50%;
     background:radial-gradient(circle at 35% 30%, #E3C98F, var(--gold-seal) 60%, #A9853F);
     display:grid; place-items:center; color:#fff;
+    animation:sealSpinIn .7s 1.05s cubic-bezier(.22,1,.36,1) both;
   }
   .seal-badge svg{width:24px;height:24px}
   .seal b{font-size:.92rem; line-height:1.4; display:block}
@@ -299,14 +400,18 @@
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto}
-    *{transition:none !important}
+    *, *::before, *::after{transition:none !important; animation:none !important}
+    .hero-text .badge, .hero-text h1, .hero-text .hero-sub, .hero-text .hero-desc,
+    .hero-text .cta-row, .hero-text .hero-meta, .hero-photo, .seal{opacity:1 !important; transform:none !important}
+    h1 .accent::after{transform:scaleX(1) !important}
   }
 </style>
 </head>
 <body>
 
 <!-- HERO -->
-<header class="hero">
+<header class="hero" id="hero">
+  <div class="hero-dots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
   <div class="hero-inner wrap" style="padding:0; max-width:1120px">
     <div class="hero-text">
       <span class="badge"><i></i> تورنتو، کانادا — ویژه ایرانیان مقیم خارج</span>
@@ -639,6 +744,44 @@
     var url = 'https://wa.me/14376166717?text=' + encodeURIComponent(lines.join('\n'));
     window.open(url, '_blank');
   });
+</script>
+<script>
+  (function () {
+    var hero = document.getElementById('hero');
+    if (!hero) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) return;
+    var photo = hero.querySelector('.hero-photo');
+    var seal = hero.querySelector('.seal');
+    var dots = hero.querySelector('.hero-dots');
+    var tx = 0, ty = 0, cx = 0, cy = 0, ticking = false;
+    function render() {
+      cx += (tx - cx) * 0.07;
+      cy += (ty - cy) * 0.07;
+      if (photo) photo.style.translate = (cx * -8) + 'px ' + (cy * -6) + 'px';
+      if (dots) dots.style.translate = (cx * 14) + 'px ' + (cy * 10) + 'px';
+      if (Math.abs(tx - cx) > 0.01 || Math.abs(ty - cy) > 0.01) {
+        requestAnimationFrame(render);
+      } else { ticking = false; }
+    }
+    function kick() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
+    hero.addEventListener('mousemove', function (e) {
+      var r = hero.getBoundingClientRect();
+      tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
+      ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
+      kick();
+    });
+    hero.addEventListener('mouseleave', function () { tx = 0; ty = 0; kick(); });
+    // Gentle parallax as the hero scrolls away
+    var onScroll = function () {
+      var y = window.scrollY || 0;
+      if (y < 700 && photo) {
+        var img = photo.querySelector('img');
+        if (img) img.style.translate = '0 ' + (y * 0.10) + 'px';
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
 </script>
 </body>
 </html>
